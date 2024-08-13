@@ -26,6 +26,8 @@
       "@redux": [
         "./src/redux"
       ],
+      "@service": ["./src/service"],
+
     }
   }
 }

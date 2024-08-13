@@ -13,6 +13,7 @@ module.exports = {
           '@assets': './src/assets',
           '@domain': './src/domain',
           '@redux': './src/redux',
+          '@service': './src/service',
         },
       },
     ],
