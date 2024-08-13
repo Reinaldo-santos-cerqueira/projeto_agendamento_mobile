@@ -40,7 +40,7 @@ export function Input<FormType extends FieldValues>({
                 placeholder={placeHolder}
                 style={styles.input}
                 value={field.value}
-                secureTextEntry={securityText}
+                secureTextEntry={password && securityText}
                 onChangeText={(value: string) => {
                   if (cpf) {
                     const formattedCPF = formatCPF(value);
