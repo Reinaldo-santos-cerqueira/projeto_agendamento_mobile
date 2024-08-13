@@ -3,10 +3,16 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {cores} from '@utils';
 import React, {useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import {LoginSchema, loginSchema} from './loginSchema';
+import {usuarioService} from '@domain';
+import {useDispatch} from 'react-redux';
+import {AppDispatch, login} from '@redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function Login() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [loading, setLoading] = useState(false);
   const {control, formState, handleSubmit, setValue} = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -17,8 +23,22 @@ export function Login() {
     mode: 'onChange',
   });
 
-  const login = () => {
-    async () => {};
+  const loginApp = async ({password, cpf}: LoginSchema) => {
+    setLoading(true);
+    try {
+      const userService = await usuarioService.login({
+        identificador: cpf,
+        senha: password,
+      });
+      if (userService) {
+        AsyncStorage.setItem('logged', 'true');
+        dispatch(login());
+      }
+    } catch {
+      Alert.alert('Login incorreto');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -57,7 +77,7 @@ export function Login() {
         loading={loading}
         disabled={!formState.isValid}
         textBtn="Entrar"
-        onClick={handleSubmit(login)}
+        onClick={handleSubmit(loginApp)}
       />
     </View>
   );
