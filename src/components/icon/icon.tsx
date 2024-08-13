@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable} from 'react-native';
-import {Document, EyeOff, EyeOn, Lock} from '@assets';
+import {ArrowNext, ArrowPrev, Document, EyeOff, EyeOn, Lock} from '@assets';
 
 export interface IconProps {
   name: IconName;
@@ -29,6 +29,8 @@ const iconRegistry = {
   eyeOn: EyeOn,
   lock: Lock,
   document: Document,
+  arrowNext: ArrowNext,
+  arrowPrev: ArrowPrev,
 };
 
 type IconType = typeof iconRegistry;
