@@ -1,13 +1,14 @@
 import {cores} from '@utils';
 import React from 'react';
 import {ActivityIndicator, StyleSheet, Text} from 'react-native';
-import {TouchableOpacity} from 'react-native';
+import {Pressable} from 'react-native';
 
 interface props {
   textBtn: string;
   onClick: any;
-  disabled: boolean;
-  loading: boolean;
+  disabled?: boolean;
+  loading?: boolean;
+  bgColor?: string;
 }
 
 export function Button({
@@ -15,13 +16,20 @@ export function Button({
   onClick,
   disabled,
   loading,
+  bgColor,
 }: props): React.ReactElement {
   return (
-    <TouchableOpacity
+    <Pressable
       disabled={disabled || loading}
       style={[
         styles.areaBtn,
-        {backgroundColor: disabled ? cores.principalDisabled : cores.principal},
+        {
+          backgroundColor: !bgColor
+            ? disabled
+              ? cores.principalDisabled
+              : cores.principal
+            : bgColor,
+        },
       ]}
       onPress={onClick}>
       {loading ? (
@@ -37,7 +45,7 @@ export function Button({
           {textBtn}
         </Text>
       )}
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 const styles = StyleSheet.create({
