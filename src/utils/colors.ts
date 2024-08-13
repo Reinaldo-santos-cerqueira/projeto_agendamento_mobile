@@ -19,3 +19,5 @@ export const cores = {
   marcado,
   principalDisabled,
 };
+
+export type coresTipo = typeof cores;
