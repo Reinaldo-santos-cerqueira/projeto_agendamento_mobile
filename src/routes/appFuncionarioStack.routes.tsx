@@ -2,25 +2,25 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Agendamento, ConfirmarPresenca, CriarAgendamento} from '@screen';
 
-export type AppStackParams = {
+export type AppStackFuncionarioParams = {
   agendamentoScreen: undefined;
   criarAgendamentoScreen: {
     hora_fim: string;
     hora_inicio: string;
     data: {
-      ano: number;
-      mes: number;
-      dia: number;
+      ano: string;
+      mes: string;
+      dia: string;
     };
   };
   confirmarPresencaScreen: {
-    agendamentoId: number;
+    agendamentoId: string;
   };
 };
 
-const Stack = createNativeStackNavigator<AppStackParams>();
+const Stack = createNativeStackNavigator<AppStackFuncionarioParams>();
 
-export function AppStack() {
+export function AppStackFuncionario() {
   return (
     <Stack.Navigator
       screenOptions={{

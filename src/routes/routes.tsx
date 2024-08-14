@@ -3,12 +3,14 @@ import React, {useEffect, useState} from 'react';
 import {AuthStack} from './authStack.routes';
 import {useSelector} from 'react-redux';
 import {RootState} from '@redux';
+import {AppStackFuncionario} from './appFuncionarioStack.routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AppStack} from './appStack.routes';
+import {AppPacienteStack} from './appPacienteStack.routes';
 
 export function Router() {
   const [logged, setLogged] = useState<boolean>(false);
   const reduxLogged = useSelector((state: RootState) => state.login.logged);
+  const reduxTipo = useSelector((state: RootState) => state.login.tipo);
 
   useEffect(() => {
     const fetchInitialValue = async () => {
@@ -16,8 +18,10 @@ export function Router() {
         const loggedAsyncStorage = await AsyncStorage.getItem('logged');
 
         if (loggedAsyncStorage === 'true') {
+          console.log('true');
           setLogged(true);
         } else {
+          console.log('false');
           setLogged(reduxLogged);
         }
       } catch (error) {
@@ -29,7 +33,15 @@ export function Router() {
   }, [reduxLogged]);
   return (
     <NavigationContainer>
-      {logged ? <AppStack /> : <AuthStack />}
+      {logged ? (
+        reduxTipo === 'F' ? (
+          <AppStackFuncionario />
+        ) : (
+          <AppPacienteStack />
+        )
+      ) : (
+        <AuthStack />
+      )}
     </NavigationContainer>
   );
 }
