@@ -27,7 +27,7 @@
         "./src/redux"
       ],
       "@service": ["./src/service"],
-
+      "@hooks": ["./src/hooks"],
     }
   }
 }

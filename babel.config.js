@@ -14,6 +14,7 @@ module.exports = {
           '@domain': './src/domain',
           '@redux': './src/redux',
           '@service': './src/service',
+          '@hooks': './src/hooks',
         },
       },
     ],
