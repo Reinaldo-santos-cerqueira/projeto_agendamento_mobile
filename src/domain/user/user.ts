@@ -10,3 +10,9 @@ export interface UsuarioAuth {
   identificador: string;
   senha: string;
 }
+
+export interface UsuarioLogin {
+  message: string;
+  token: string;
+  user: Usuario;
+}

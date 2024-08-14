@@ -1,4 +1,8 @@
-import {Agendamento} from './agendamento';
+import {
+  Agendamento,
+  AgendamentoComUsuario,
+  AgendamentoPost,
+} from './agendamento';
 import {AgendamentoApi} from './agendamentoApi';
 
 interface dataParametro {
@@ -8,6 +12,11 @@ interface dataParametro {
 }
 export const AgendamentoService = {
   getByData,
+  getById,
+  updateComparecer,
+  create,
+  getByUserId,
+  updateAvaliacao,
 };
 
 async function getByData({
@@ -21,4 +30,29 @@ async function getByData({
   const data = ano + '-' + mesFormat + '-' + diaFormat;
 
   return await AgendamentoApi.getByData(data);
+}
+
+async function getById(id: string): Promise<AgendamentoComUsuario> {
+  return await AgendamentoApi.getById(id);
+}
+async function getByUserId(): Promise<AgendamentoComUsuario[]> {
+  return await AgendamentoApi.getByUserId();
+}
+
+async function create(agendamento: AgendamentoPost): Promise<AgendamentoPost> {
+  return await AgendamentoApi.create(agendamento);
+}
+
+async function updateComparecer(
+  confirmado: boolean,
+  id: string,
+): Promise<Agendamento> {
+  return await AgendamentoApi.updateComparecer(confirmado, id);
+}
+
+async function updateAvaliacao(
+  avaliacao: number,
+  id: string,
+): Promise<Agendamento> {
+  return await AgendamentoApi.updateAvalicao(id, avaliacao);
 }
