@@ -1,8 +1,8 @@
 import {Button, Icon} from '@components';
 import {Agendamento as AgendamentoModel, AgendamentoService} from '@domain';
-import {AppScreenProps} from '@routes';
+import {AppFuncionarioScreenProps} from '@routes';
 import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {cores} from '@utils';
+import {cores, nomesMeses} from '@utils';
 import React, {useState} from 'react';
 import {
   View,
@@ -12,6 +12,7 @@ import {
   ListRenderItemInfo,
   ActivityIndicator,
 } from 'react-native';
+import {useLogout} from '@hooks';
 
 interface Horario {
   hora_inicio: string;
@@ -21,9 +22,10 @@ interface Horario {
 
 export function Agendamento({
   navigation,
-}: AppScreenProps<'agendamentoScreen'>): React.ReactElement {
+}: AppFuncionarioScreenProps<'agendamentoScreen'>): React.ReactElement {
   const dataAtual = new Date();
   const queryClient = useQueryClient();
+  const handleLogout = useLogout();
 
   const [dataSelecionada, setDataSelecionada] = useState(new Date());
   const horarios: Horario[] = [
@@ -42,12 +44,6 @@ export function Agendamento({
   const {error, isLoading, data} = useQuery({
     queryKey: ['agendamentoGetByData', dataSelecionada],
     queryFn: async () => {
-      console.log({
-        dia: dataSelecionada.getDate(),
-        mes: dataSelecionada.getMonth() + 1,
-        ano: dataSelecionada.getFullYear(),
-      });
-
       const response = await AgendamentoService.getByData({
         dia: dataSelecionada.getDate(),
         mes: dataSelecionada.getMonth() + 1,
@@ -56,21 +52,6 @@ export function Agendamento({
       return response;
     },
   });
-
-  const nomesMeses = [
-    'Janeiro',
-    'Fevereiro',
-    'Março',
-    'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
-    'Agosto',
-    'Setembro',
-    'Outubro',
-    'Novembro',
-    'Dezembro',
-  ];
 
   const mudarDia = async (operation: 'add' | 'sub') => {
     const novaData = new Date(dataSelecionada);
@@ -92,8 +73,9 @@ export function Agendamento({
   const renderItem = (item: ListRenderItemInfo<Horario>) => {
     let marcado = false;
     let bgColor = cores.vaga;
-
+    let id: string;
     data?.forEach((response: AgendamentoModel) => {
+      id = response.id;
       if (
         response.hora_fim === item.item.hora_fim ||
         response.hora_inicio === item.item.hora_inicio
@@ -105,15 +87,17 @@ export function Agendamento({
 
     const onClick = () => {
       if (marcado) {
-        navigation.navigate('confirmarPresencaScreen', {agendamentoId: 1});
+        navigation.navigate('confirmarPresencaScreen', {
+          agendamentoId: id,
+        });
       } else {
         navigation.navigate('criarAgendamentoScreen', {
           hora_fim: item.item.hora_fim,
           hora_inicio: item.item.hora_inicio,
           data: {
-            ano: dataSelecionada.getFullYear(),
-            mes: dataSelecionada.getMonth() + 1, // Ajusta o mês
-            dia: dataSelecionada.getDate(),
+            ano: dataSelecionada.getFullYear().toString(),
+            mes: (dataSelecionada.getMonth() + 1).toString(),
+            dia: dataSelecionada.getDate().toString(),
           },
         });
       }
@@ -145,6 +129,13 @@ export function Agendamento({
     return (
       <View style={styles.container}>
         <Text>Erro: {error.message}</Text>
+        <Icon
+          onPress={() => {
+            handleLogout();
+          }}
+          name={'exit'}
+          containerStyle={styles.btnExit}
+        />
       </View>
     );
   }
@@ -165,6 +156,13 @@ export function Agendamento({
         numColumns={2}
         data={horarios}
         renderItem={renderItem}
+      />
+      <Icon
+        onPress={() => {
+          handleLogout();
+        }}
+        name={'exit'}
+        containerStyle={styles.btnExit}
       />
     </View>
   );
@@ -196,5 +194,10 @@ const styles = StyleSheet.create({
   areaItem: {
     flex: 1,
     margin: 10,
+  },
+  btnExit: {
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
   },
 });
